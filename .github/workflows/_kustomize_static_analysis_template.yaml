@@ -1,0 +1,32 @@
+name: Kustomize Manifest Static Analysis
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      kustomize-path:
+        description: 'A analyze kustomize path passed from the caller workflow'
+        required: false
+        type: string
+
+jobs:
+  static-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+      - name: Install tools by mise
+        uses: jdx/mise-action@v2
+        with:
+          version: 2024.10.9
+          cache: 'true'
+          tool_versions: |
+            kustomize 5.5.0
+            kubeconform 0.6.7
+            polaris 9.5.0
+            pluto 5.19.4
+      - name: kustomize Run
+        run: |
+          kustomize build ${{ inputs.kustomize-path }}
