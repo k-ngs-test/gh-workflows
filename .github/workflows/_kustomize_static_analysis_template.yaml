@@ -6,7 +6,7 @@ on:
     inputs:
       kustomize-path:
         description: 'A analyze kustomize path passed from the caller workflow'
-        required: false
+        required: true
         type: string
 
 jobs:
