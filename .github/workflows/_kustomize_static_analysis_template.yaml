@@ -30,3 +30,12 @@ jobs:
       - name: kustomize Run
         run: |
           kustomize build ${{ inputs.kustomize-path }}
+      - name: Run kubeconform
+        run: |
+          kustomize build ${{ inputs.kustomize-path }} | kubeconform --summary -output pretty
+      - name: Run polaris
+        run: |
+          kustomize build ${{ inputs.kustomize-path }} > build.yaml && polaris audit --only-show-failed-tests --format pretty --severity danger --set-exit-code-on-danger --audit-path build.yaml
+      - name: Run pluto
+        run: |
+          kustomize build ${{ inputs.kustomize-path }} | pluto detect -
